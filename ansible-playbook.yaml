@@ -1,0 +1,24 @@
+---
+- name: Deploy website-nginx app on AWS EC2 instances
+  hosts: localhost
+  become: yes
+  vars:
+    repo_url: "https://github.com/aaabaza761/website-nginx.git"
+    repo_dir: "/tmp/website-nginx"
+    k8s_manifests_dir: "/tmp/sample-website/k8s"
+
+  tasks:
+    - name: Clone the repository on master node
+      git:
+        repo: "{{ repo_url }}"
+        dest: "{{ repo_dir }}"
+        update: yes
+
+    - name: Apply Kubernetes Deployment YAML
+      command: kubectl apply -f "{{ k8s_manifests_dir }}/deployment.yaml"
+
+    - name: Apply Kubernetes Service YAML
+      command: kubectl apply -f "{{ k8s_manifests_dir }}/service.yaml"
+
+    - name: Apply Kubernetes Autoscale YAML
+      command: kubectl apply -f "{{ k8s_manifests_dir }}/autoscale.yaml"
