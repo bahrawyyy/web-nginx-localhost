@@ -1,8 +1,10 @@
 ---
 - name: Deploy website-nginx app
-  hosts: localhost
+  hosts: ec2-instance
+  become: yes
   vars_files:
     - vars.yaml
+
   tasks:
     - name: build new image
       command: docker build -t nashaat111/project-app .
