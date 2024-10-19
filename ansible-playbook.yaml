@@ -5,7 +5,7 @@
     - vars.yaml
   tasks:
     - name: build new image
-      command: docker build -t ahmed377/web-nginx
+      command: docker build -t ahmed377/web-nginx .
       register: build_result
       ignore_errors: yes
 
