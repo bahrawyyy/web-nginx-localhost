@@ -1,7 +1,6 @@
 ---
 - name: Deploy website-nginx app
   hosts: ec2-instance
-  become: yes
   vars_files:
     - vars.yaml
 
