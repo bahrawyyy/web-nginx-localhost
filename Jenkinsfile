@@ -13,6 +13,13 @@ pipeline {
             }
         }
 
+        stage('Create .ssh directory') {
+            steps {
+                sh 'mkdir -p /var/lib/jenkins/.ssh'
+            }
+        }
+
+
         stage('Add EC2 Host to Known Hosts') {
             steps {
                 sshagent(['ec2-server-key']) {
