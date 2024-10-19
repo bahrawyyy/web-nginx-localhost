@@ -13,6 +13,14 @@ pipeline {
             }
         }
 
+        stage('Add EC2 Host to Known Hosts') {
+            steps {
+                sshagent(['ec2-server-key']) {
+                    sh "ssh-keyscan -H 52.91.62.169 >> ~/.ssh/known_hosts"
+                }
+            }
+        }
+
         stage('Run Ansible Playbook') {
             steps {
                 sshagent(['ec2-server-key']) {
