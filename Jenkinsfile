@@ -19,7 +19,6 @@ pipeline {
             }
         }
 
-
         stage('Add EC2 Host to Known Hosts') {
             steps {
                 sshagent(['ec2-server-key']) {
@@ -28,15 +27,39 @@ pipeline {
             }
         }
 
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh 'docker build -t abdallabahrawy/project-app .'
+                }
+            }
+        }
+
+        stage('Login to DockerHub') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', 'DOCKER_HUB_CREDENTIALS') {
+                        echo 'Logged into DockerHub'
+                    }
+                }
+            }
+        }
+
+        stage('Push Docker Image to DockerHub') {
+            steps {
+                script {
+                    sh 'docker push abdallabahrawy/project-app:latest'
+                }
+            }
+        }
+
         stage('Run Ansible Playbook') {
             steps {
                 sshagent(['ec2-server-key']) {
                     script {
-                        withCredentials([usernamePassword(credentialsId: '1bb40899-65b9-4fa9-811e-93c08ac39701', usernameVariable: 'dockerhub_username', passwordVariable: 'dockerhub_password')]) {
-                            sh """
-                            ansible-playbook -i inventory ${ANSIBLE_PLAYBOOK} --extra-vars "@vars.yaml"
-                            """
-                        }
+                        sh """
+                        ansible-playbook -i inventory ${ANSIBLE_PLAYBOOK} --extra-vars "@vars.yaml"
+                        """
                     }
                 }
             }
