@@ -13,7 +13,7 @@
         reauthorize: yes
 
     - name: build new image
-      command: docker build -t abdallabahrawy/project-app /path/to/docker-context
+      command: docker build -t abdallabahrawy/project-app .
       register: build_result
       ignore_errors: yes
 
