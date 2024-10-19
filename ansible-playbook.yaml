@@ -5,7 +5,7 @@
     - vars.yaml
   tasks:
     - name: build new image
-      command: docker build -t ahmed377/web-nginx .
+      command: docker build -t nashaat111/project-app .
       register: build_result
       ignore_errors: yes
 
@@ -14,7 +14,7 @@
         var: build_result
 
     - name: run the container
-      command: docker run -d ahmed377/web-nginx
+      command: docker run -d nashaat111/project-app
       register: running_result
       ignore_errors: yes
 
