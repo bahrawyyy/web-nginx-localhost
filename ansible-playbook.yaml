@@ -1,30 +1,34 @@
 ---
 - name: Deploy website-nginx app
   hosts: localhost
+  vars_files:
+    - vars.yaml
   tasks:
-    - name: Apply Kubernetes Deployment YAML
-      command: kubectl apply -f k8s/deploy.yaml
-      register: deployment_result
+    - name: build new image
+      command: docker build -t ahmed377/web-nginx
+      register: build_result
       ignore_errors: yes
 
-    - name: Log Deployment Result
+    - name: Log build Result
       debug:
-        var: deployment_result
+        var: build_result
 
-    - name: Apply Kubernetes Service YAML
-      command: kubectl apply -f k8s/service.yaml
-      register: service_result
+    - name: run the container
+      command: docker run -d ahmed377/web-nginx
+      register: running_result
       ignore_errors: yes
 
-    - name: Log Service Result
+    - name: Log running Result
       debug:
-        var: service_result
+        var: running_result
 
-    - name: Apply Kubernetes Autoscale YAML
-      command: kubectl apply -f k8s/autoscale.yaml
-      register: autoscale_result
+    - name: login to DockerHub 
+      docker_login:
+      username: "{{dockerhub_username}}"
+      password: "{{dockerhub_password}}"
+      registry: https://index.docker.io/v1/
+      reauthorize: yes
+
+    - name: pushing the image to DockerHub
+      command: docker push  nashaat111/project-app
       ignore_errors: yes
-
-    - name: Log Autoscale Result
-      debug:
-        var: autoscale_result
