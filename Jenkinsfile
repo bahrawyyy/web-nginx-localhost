@@ -15,11 +15,13 @@ pipeline {
 
         stage('Run Ansible Playbook') {
             steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub-repo', usernameVariable: 'dockerhub_username', passwordVariable: 'dockerhub_password')]) {
-                        sh """
-                        ansible-playbook ${ANSIBLE_PLAYBOOK} --extra-vars "@vars.yaml"
-                        """
+                sshagent(['ec2-server-key']) {
+                    script {
+                        withCredentials([usernamePassword(credentialsId: 'docker-hub-repo', usernameVariable: 'dockerhub_username', passwordVariable: 'dockerhub_password')]) {
+                            sh """
+                            ansible-playbook -i inventory ${ANSIBLE_PLAYBOOK} --extra-vars "@vars.yaml"
+                            """
+                        }
                     }
                 }
             }
