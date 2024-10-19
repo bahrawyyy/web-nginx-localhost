@@ -6,7 +6,7 @@
 
   tasks:
     - name: build new image
-      command: docker build -t nashaat111/project-app .
+      command: docker build -t abdallabahrawy/project-app .
       register: build_result
       ignore_errors: yes
 
@@ -15,7 +15,7 @@
         var: build_result
 
     - name: run the container
-      command: docker run -d nashaat111/project-app
+      command: docker run -d abdallabahrawy/project-app
       register: running_result
       ignore_errors: yes
 
@@ -31,5 +31,5 @@
        reauthorize: yes
 
     - name: pushing the image to DockerHub
-      command: docker push nashaat111/project-app
+      command: docker push abdallabahrawy/project-app
       ignore_errors: yes
