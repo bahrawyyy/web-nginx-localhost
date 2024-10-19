@@ -16,9 +16,11 @@ pipeline {
         stage('Run Ansible Playbook') {
             steps {
                 script {
-                    sh """
-                    ansible-playbook  ${ANSIBLE_PLAYBOOK} --extra-vars vars.yaml
-                    """
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-repo', usernameVariable: 'dockerhub_username', passwordVariable: 'dockerhub_password')]) {
+                        sh """
+                        ansible-playbook ${ANSIBLE_PLAYBOOK} --extra-vars "@vars.yaml"
+                        """
+                    }
                 }
             }
         }
@@ -26,7 +28,6 @@ pipeline {
 
     post {
         always {
-            // Clean up unused Docker images to save space
             script {
                 sh "docker image prune -f"
             }
