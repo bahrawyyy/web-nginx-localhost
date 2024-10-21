@@ -5,17 +5,37 @@
     - vars.yaml
 
   tasks:
-    # - name: clonning the repo
-    #   command: git clone https://github.com/bahrawyyy/web-nginx-localhost.git
-    #   register: clonning_result
-    #   ignore_errors: yes
+    - name: Check if repo directory exists
+      stat:
+        path: web-nginx-localhost
+      register: repo_stat
 
-    # - name: log clon result
-    #   debug:
-    #     var: clonning_result
+    - name: Remove repo if it exists
+      command: rm -rf web-nginx-localhost
+      when: repo_stat.stat.exists
 
-    - name: change directory
-      command: cd web-nginx-localhost
+    - name: List elements in the current directory before cloning
+      command: ls
+      register: ls_result
+
+    - name: Log ls result
+      debug:
+        var: ls_result
+
+    - name: Clone the repo if it doesn't exist
+      git:
+        repo: https://github.com/bahrawyyy/web-nginx-localhost.git
+        dest: web-nginx-localhost
+      when: not repo_stat.stat.exists
+
+    - name: Log clone result
+      debug:
+        var: clonning_result
+
+    - name: List elements in the repo directory after cloning
+      command: ls
+      args:
+        chdir: web-nginx-localhost
   
     - name: login to DockerHub 
       docker_login:
