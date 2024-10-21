@@ -5,14 +5,17 @@
     - vars.yaml
 
   tasks:
-    - name: clonning the repo
-      command: git clone https://github.com/bahrawyyy/web-nginx-localhost.git
-      register: clonning_result
-      ignore_errors: yes
+    # - name: clonning the repo
+    #   command: git clone https://github.com/bahrawyyy/web-nginx-localhost.git
+    #   register: clonning_result
+    #   ignore_errors: yes
 
-    - name: log clon result
-      debug:
-        var: clonning_result
+    # - name: log clon result
+    #   debug:
+    #     var: clonning_result
+
+    - name: change directory
+      command: cd web-nginx-localhost
   
     - name: login to DockerHub 
       docker_login:
@@ -21,9 +24,6 @@
         registry: https://index.docker.io/v1/
         reauthorize: yes
         
-    - name: change directory
-      command: cd web-nginx-localhost
-
     - name: build new image
       command: docker build -t abdallabahrawy/project-app .
       register: build_result
