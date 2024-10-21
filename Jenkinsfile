@@ -22,7 +22,7 @@ pipeline {
         stage('Add EC2 Host to Known Hosts') {
             steps {
                 sshagent(['ec2-server-key']) {
-                    sh "ssh-keyscan -H 16.170.224.165 >> ~/.ssh/known_hosts"
+                    sh "ssh-keyscan -H 16.170.242.12 >> ~/.ssh/known_hosts"
                 }
             }
         }
