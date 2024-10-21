@@ -15,11 +15,11 @@
         var: clonning_result
 
     - name: Stop all running containers
-      command: docker stop $(docker ps -q)
+      shell: docker stop $(docker ps -q)
       ignore_errors: yes
 
     - name: Remove all containers (stopped and running)
-      command: docker rm $(docker ps -aq)
+      shell: docker rm $(docker ps -aq)
       ignore_errors: yes
   
     - name: build new image
