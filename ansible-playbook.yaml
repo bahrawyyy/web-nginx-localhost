@@ -5,15 +5,25 @@
     - vars.yaml
 
   tasks:
-    - name: login to DockerHub 
-      docker_login:
-        username: "{{ dockerhub_username }}"
-        password: "{{ dockerhub_password }}"
-        registry: https://index.docker.io/v1/
-        reauthorize: yes
-        
+    - name: clonning the repo
+      command: git clone https://github.com/bahrawyyy/web-nginx-localhost.git
+      register: clonning_result
+      ignore_errors: yes
+
+    - name: log clon result
+      debug:
+        var: clonning_result
+
+    - name: Stop all running containers
+      command: docker stop $(docker ps -q)
+      ignore_errors: yes
+
+    - name: Remove all containers (stopped and running)
+      command: docker rm $(docker ps -aq)
+      ignore_errors: yes
+  
     - name: build new image
-      command: docker build -t abdallabahrawy/project-app .
+      command: docker build -t abdallabahrawy/project-app ~/web-nginx-localhost/
       register: build_result
       ignore_errors: yes
 
@@ -29,6 +39,13 @@
     - name: Log running Result
       debug:
         var: running_result
+        
+    - name: login to DockerHub 
+      docker_login:
+        username: "{{ dockerhub_username }}"
+        password: "{{ dockerhub_password }}"
+        registry: https://index.docker.io/v1/
+        reauthorize: yes
 
     - name: pushing the image to DockerHub
       command: docker push abdallabahrawy/project-app
