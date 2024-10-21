@@ -5,6 +5,15 @@
     - vars.yaml
 
   tasks:
+    - name: clonning the repo
+      command: git clone https://github.com/bahrawyyy/web-nginx-localhost.git
+      register: clonning_result
+      ignore_errors: yes
+
+    - name: log clon result
+      debug:
+        var: clonning_result
+  
     - name: login to DockerHub 
       docker_login:
         username: "{{ dockerhub_username }}"
